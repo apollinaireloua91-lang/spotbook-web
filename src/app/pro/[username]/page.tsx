@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { supabase, type Profile, type Service, type Review, type Video, type Event } from "@/lib/supabase";
@@ -7,7 +9,7 @@ import Footer from "@/components/layout/Footer";
 import ProProfileContent from "./ProProfileContent";
 
 interface Props {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }
 
 async function getProfile(username: string): Promise<Profile | null> {
@@ -65,7 +67,8 @@ async function getEvents(profileId: string): Promise<Event[]> {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const profile = await getProfile(params.username);
+  const { username } = await params;
+  const profile = await getProfile(username);
   if (!profile) return { title: "Profil introuvable" };
 
   return {
@@ -80,7 +83,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProProfilePage({ params }: Props) {
-  const profile = await getProfile(params.username);
+  const { username } = await params;
+  const profile = await getProfile(username);
   if (!profile) notFound();
 
   const [services, reviews, videos, events] = await Promise.all([

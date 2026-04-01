@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -7,7 +9,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 async function getEvent(id: string): Promise<(Event & { profile: Profile }) | null> {
@@ -23,7 +25,8 @@ async function getEvent(id: string): Promise<(Event & { profile: Profile }) | nu
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const event = await getEvent(params.id);
+  const { id } = await params;
+  const event = await getEvent(id);
   if (!event) return { title: "Événement introuvable" };
 
   return {
@@ -41,7 +44,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function EventPage({ params }: Props) {
-  const event = await getEvent(params.id);
+  const { id } = await params;
+  const event = await getEvent(id);
   if (!event) notFound();
 
   const ticketsRemaining = event.tickets_total - event.tickets_sold;

@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -7,7 +9,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 async function getVideo(id: string): Promise<(Video & { profile: Profile }) | null> {
@@ -34,7 +36,8 @@ async function getRelatedVideos(profileId: string, excludeId: string): Promise<V
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const video = await getVideo(params.id);
+  const { id } = await params;
+  const video = await getVideo(id);
   if (!video) return { title: "Vidéo introuvable" };
 
   return {
@@ -50,7 +53,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function VideoPage({ params }: Props) {
-  const video = await getVideo(params.id);
+  const { id } = await params;
+  const video = await getVideo(id);
   if (!video) notFound();
 
   const relatedVideos = await getRelatedVideos(video.profile_id, video.id);
