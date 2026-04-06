@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --brand-bg: #FFFFFF;
+  --brand-card: #FFF3DA;
+  --brand-green: #043603;
+  --brand-text: #1A1A1A;
+  --brand-border: #E8E0D0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--brand-bg);
+  color: var(--brand-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: rgba(4, 54, 3, 0.15);
+  color: var(--brand-green);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--brand-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c9bfab;
+}
+
+/* Glass morphism card */
+@layer components {
+  .glass-card {
+    background: rgba(255, 243, 218, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--brand-border);
+    border-radius: 1.25rem;
+  }
+
+  .glass-card-white {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--brand-border);
+    border-radius: 1.25rem;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #043603 0%, #0a5c07 50%, #043603 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .btn-primary {
+    @apply bg-brand-green text-white font-semibold px-8 py-4 rounded-2xl
+           transition-all duration-300 hover:shadow-[0_8px_30px_rgba(4,54,3,0.3)]
+           hover:-translate-y-0.5 active:translate-y-0 relative overflow-hidden;
+  }
+
+  .btn-secondary {
+    @apply bg-brand-card text-brand-green font-semibold px-8 py-4 rounded-2xl
+           border border-brand-border transition-all duration-300
+           hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  /* 3D phone mockup styles */
+  .phone-3d {
+    perspective: 1200px;
+    transform-style: preserve-3d;
+  }
+
+  .phone-3d-inner {
+    transform-style: preserve-3d;
+    animation: phone-float 8s ease-in-out infinite;
+  }
+
+  @keyframes phone-float {
+    0%, 100% {
+      transform: rotateY(-8deg) rotateX(5deg) translateY(0px);
+    }
+    25% {
+      transform: rotateY(-3deg) rotateX(2deg) translateY(-12px);
+    }
+    50% {
+      transform: rotateY(5deg) rotateX(-3deg) translateY(-20px);
+    }
+    75% {
+      transform: rotateY(2deg) rotateX(1deg) translateY(-8px);
+    }
+  }
+
+  /* Noise texture overlay */
+  .noise-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Grain overlay */
+  .grain::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.015;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+}

@@ -1,151 +1,304 @@
-import { Metadata } from "next";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: "Conditions d'utilisation",
-  description: "Conditions générales d'utilisation de la plateforme Spotbook.",
-};
+  title: 'Conditions d\'utilisation',
+  description: 'Conditions d\'utilisation de Spotbook - Accord de service entre vous et Spotbook',
+}
 
 export default function TermsPage() {
   return (
-    <>
-      <Header />
-      <main className="pt-24 pb-16 min-h-screen">
-        <article className="max-w-3xl mx-auto px-6 prose prose-invert prose-sm">
-          <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-2 text-white">
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <div className="border-b border-brand-border bg-white py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-4xl font-bold text-brand-text mb-4">
             Conditions d&apos;utilisation
           </h1>
-          <p className="text-white/40 mb-12">
-            Dernière mise à jour : 1er avril 2026
+          <p className="text-brand-muted text-lg">
+            Dernière mise à jour : {new Date().toLocaleDateString('fr-CA', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
           </p>
+        </div>
+      </div>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              1. Description du service
-            </h2>
-            <p className="text-white/60 leading-relaxed">
-              Spotbook est une plateforme de mise en relation (&laquo; marketplace &raquo;) connectant des clients avec des professionnels indépendants offrant des services variés (coiffure, barbier, esthétique, fitness, photographie, événementiel, etc.). Spotbook n&apos;est pas le prestataire des services et agit uniquement en tant qu&apos;intermédiaire technologique.
+      {/* Content */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="prose prose-lg max-w-none text-brand-text space-y-8">
+          {/* Introduction */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">Introduction</h2>
+            <p>
+              Bienvenue sur Spotbook. Ces conditions d&apos;utilisation (&laquo; Conditions &raquo;) régissent votre
+              utilisation de notre plateforme, site web et applications mobiles. En accédant ou en
+              utilisant Spotbook, vous acceptez d&apos;être lié par ces Conditions.
             </p>
           </section>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              2. Création de compte
-            </h2>
-            <p className="text-white/60 leading-relaxed mb-4">
-              Deux types de comptes sont disponibles :
+          {/* Service Description */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">1. Description du service</h2>
+            <p>
+              Spotbook est une super-app qui connecte les clients aux meilleurs professionnels
+              indépendants. Notre plateforme permet :
             </p>
-            <ul className="list-disc list-inside text-white/60 space-y-2">
-              <li><strong className="text-white/80">Compte Client :</strong> permet de parcourir les profils, réserver des services, acheter des billets d&apos;événements et laisser des avis.</li>
-              <li><strong className="text-white/80">Compte Professionnel :</strong> permet de créer un profil public, publier des vidéos, lister des services, gérer un agenda, créer des événements et recevoir des paiements.</li>
-            </ul>
-            <p className="text-white/60 leading-relaxed mt-4">
-              Vous devez avoir au moins 16 ans pour créer un compte. Vous êtes responsable de la confidentialité de vos identifiants de connexion.
-            </p>
-          </section>
-
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              3. Paiements et commissions
-            </h2>
-            <p className="text-white/60 leading-relaxed mb-4">
-              Tous les paiements sont traités via Stripe Connect. Les conditions suivantes s&apos;appliquent :
-            </p>
-            <ul className="list-disc list-inside text-white/60 space-y-2">
-              <li><strong className="text-white/80">Commission sur les réservations :</strong> 12% du montant total du service, prélevée automatiquement.</li>
-              <li><strong className="text-white/80">Commission sur la billetterie :</strong> 7% du prix du billet.</li>
-              <li><strong className="text-white/80">Système d&apos;acompte :</strong> le prestataire peut exiger un acompte (entre 20% et 50% du prix). Le solde restant est payé directement au prestataire lors du rendez-vous.</li>
-              <li><strong className="text-white/80">Virements :</strong> les revenus sont virés automatiquement sur le compte bancaire du prestataire selon le calendrier de Stripe (généralement sous 2 à 7 jours ouvrables).</li>
+            <ul className="space-y-2 list-disc pl-6 mt-4">
+              <li>Découvrir et consulter des vidéos de professionnels</li>
+              <li>Réserver des services auprès de professionnels indépendants</li>
+              <li>Acheter des billets pour des événements organisés par des professionnels</li>
+              <li>Effectuer des paiements sécurisés via notre plateforme</li>
             </ul>
           </section>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              4. Politique d&apos;annulation
-            </h2>
-            <p className="text-white/60 leading-relaxed mb-4">
-              Chaque prestataire choisit sa politique d&apos;annulation parmi les options suivantes :
+          {/* Account Creation */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">2. Création et types de comptes</h2>
+
+            <div className="mt-4 space-y-4 pl-4 border-l-4 border-brand-green">
+              <div>
+                <h3 className="font-semibold text-brand-text">Compte Client</h3>
+                <p className="text-brand-muted">
+                  Permet de réserver des services et acheter des billets d&apos;événements.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Compte Professionnel</h3>
+                <p className="text-brand-muted">
+                  Permet d&apos;offrir des services, organiser des événements et partager du contenu vidéo.
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-4">
+              Vous êtes responsable de la confidentialité de vos identifiants de connexion et de
+              toutes les activités qui se produisent sous votre compte. Vous acceptez de
+              fournir des informations exactes et à jour.
             </p>
-            <ul className="list-disc list-inside text-white/60 space-y-2">
-              <li><strong className="text-white/80">Flexible :</strong> annulation gratuite jusqu&apos;à 24 heures avant le rendez-vous. Remboursement complet de l&apos;acompte.</li>
-              <li><strong className="text-white/80">Modérée :</strong> annulation gratuite jusqu&apos;à 48 heures avant. Remboursement de 50% de l&apos;acompte si annulation entre 24h et 48h.</li>
-              <li><strong className="text-white/80">Stricte :</strong> annulation gratuite jusqu&apos;à 72 heures avant. Aucun remboursement après ce délai.</li>
+          </section>
+
+          {/* Payment Terms */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">3. Conditions de paiement</h2>
+
+            <div className="mt-4 space-y-4 pl-4 border-l-4 border-brand-green">
+              <div>
+                <h3 className="font-semibold text-brand-text">Commission Spotbook</h3>
+                <p className="text-brand-muted">
+                  Nous prélevons une commission de <strong>12 %</strong> sur chaque réservation de service
+                  et de <strong>7 %</strong> sur les ventes de billets d&apos;événements.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Système d&apos;acompte</h3>
+                <p className="text-brand-muted">
+                  Les réservations de services nécessitent souvent un acompte au moment de la
+                  réservation. Le solde restant est payable au moment du service (sur place ou selon
+                  les modalités convenues avec le professionnel).
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Billets d&apos;événements</h3>
+                <p className="text-brand-muted">
+                  Le prix affiché est le prix final. Les billets sont émis immédiatement après le paiement.
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-4">
+              Tous les paiements sont traités de manière sécurisée via Stripe. Nous ne stockons
+              jamais votre numéro de carte complet.
+            </p>
+          </section>
+
+          {/* Cancellation Policy */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">4. Politique d&apos;annulation</h2>
+            <p>
+              Les professionnels peuvent définir leur politique d&apos;annulation. Voici les trois
+              niveaux disponibles :
+            </p>
+
+            <div className="mt-4 space-y-4 pl-4 border-l-4 border-brand-green">
+              <div>
+                <h3 className="font-semibold text-brand-text">Flexible (24h)</h3>
+                <p className="text-brand-muted">
+                  Annulation gratuite jusqu&apos;à 24 heures avant le service. Passé ce délai,
+                  l&apos;acompte n&apos;est pas remboursable.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Modérée (48h)</h3>
+                <p className="text-brand-muted">
+                  Annulation gratuite jusqu&apos;à 48 heures avant. Après, l&apos;acompte n&apos;est pas remboursable.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Stricte (72h)</h3>
+                <p className="text-brand-muted">
+                  Annulation gratuite jusqu&apos;à 72 heures avant. Après, l&apos;acompte n&apos;est pas remboursable.
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-4">
+              Les billets d&apos;événements non utilisés peuvent être remboursés selon la politique
+              du professionnel, jusqu&apos;à 7 jours avant l&apos;événement.
+            </p>
+          </section>
+
+          {/* Content Policy */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">5. Politique de contenu</h2>
+            <p>
+              Vous acceptez de ne pas publier, partager ou promouvoir du contenu qui :
+            </p>
+            <ul className="space-y-2 list-disc pl-6 mt-4">
+              <li>Viole les droits d&apos;auteur ou la propriété intellectuelle d&apos;autrui</li>
+              <li>Contient de la haine, du harcèlement, de la discrimination ou de la violence</li>
+              <li>Est obscène, pornographique ou sexuellement explicite</li>
+              <li>Promeut des activités illégales ou dangereuses</li>
+              <li>Est faux, trompeur ou constitue de la fraude</li>
+              <li>Viole la vie privée d&apos;une autre personne</li>
             </ul>
-            <p className="text-white/60 leading-relaxed mt-4">
-              Les remboursements sont traités automatiquement via Stripe dans un délai de 5 à 10 jours ouvrables.
+
+            <p className="mt-4">
+              Spotbook se réserve le droit de supprimer tout contenu violant ces règles et
+              de suspendre ou terminer les comptes des contrevenants.
             </p>
           </section>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              5. Contenu utilisateur
-            </h2>
-            <p className="text-white/60 leading-relaxed mb-4">
-              Les prestataires sont responsables du contenu qu&apos;ils publient (vidéos, descriptions, images). Le contenu suivant est strictement interdit :
+          {/* Intellectual Property */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">6. Propriété intellectuelle</h2>
+            <p>
+              Spotbook et tous ses éléments (logo, design, fonctionnalités, contenu) sont la
+              propriété de Spotbook ou de ses concédants. Vous ne pouvez pas reproduire,
+              modifier ou distribuer notre contenu sans permission écrite.
             </p>
-            <ul className="list-disc list-inside text-white/60 space-y-2">
-              <li>Contenu à caractère sexuel ou pornographique</li>
-              <li>Contenu haineux, discriminatoire ou incitant à la violence</li>
-              <li>Contenu trompeur ou frauduleux</li>
-              <li>Contenu violant les droits de propriété intellectuelle de tiers</li>
-              <li>Contenu faisant la promotion de substances illégales</li>
+            <p className="mt-4">
+              Le contenu que vous publiez (vidéos, descriptions, photos) reste votre propriété,
+              mais vous nous accordez une licence pour l&apos;afficher et le promouvoir sur notre plateforme.
+            </p>
+          </section>
+
+          {/* Limitation of Liability */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">7. Limitation de responsabilité</h2>
+            <p>
+              Spotbook fournit la plateforme &laquo; telle quelle &raquo; sans garanties expresses ou implicites.
+              À la limite maximale permise par la loi, Spotbook ne sera pas responsable de :
+            </p>
+            <ul className="space-y-2 list-disc pl-6 mt-4">
+              <li>Dommages indirects, accessoires ou consécutifs</li>
+              <li>Perte de profits, de données ou de revenus</li>
+              <li>La qualité des services fournis par les professionnels</li>
+              <li>Les interruptions de service ou erreurs techniques</li>
             </ul>
-            <p className="text-white/60 leading-relaxed mt-4">
-              Spotbook se réserve le droit de supprimer tout contenu contrevenant à ces règles et de suspendre ou résilier le compte de l&apos;utilisateur concerné.
+
+            <p className="mt-4">
+              Nous agissons en tant qu&apos;intermédiaire. La relation contractuelle principale
+              est entre vous et le professionnel indépendant.
             </p>
           </section>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              6. Propriété intellectuelle
-            </h2>
-            <p className="text-white/60 leading-relaxed">
-              La marque Spotbook, le logo, le design de l&apos;application et tout contenu original créé par Spotbook sont la propriété exclusive de Spotbook Inc. Les prestataires conservent la propriété intellectuelle de leur contenu mais accordent à Spotbook une licence non exclusive, mondiale et libre de redevances pour afficher, distribuer et promouvoir ce contenu dans le cadre des Services.
+          {/* Account Termination */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">8. Résiliation du compte</h2>
+            <p>
+              Vous pouvez demander la suppression de votre compte à tout moment en contactant
+              support_spotbook@gmail.com. Spotbook se réserve le droit de suspendre ou de
+              supprimer un compte si :
+            </p>
+            <ul className="space-y-2 list-disc pl-6 mt-4">
+              <li>Violation de ces Conditions</li>
+              <li>Activité frauduleuse ou criminelle</li>
+              <li>Non-paiement de frais dus</li>
+              <li>Plaintes répétées de clients ou de professionnels</li>
+            </ul>
+          </section>
+
+          {/* Governing Law */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">9. Droit applicable et juridiction</h2>
+            <p>
+              Ces Conditions sont régies par les lois de la Province de Québec, Canada,
+              sans égard à ses principes de conflit de lois. Les deux parties consentent à la
+              juridiction exclusive des tribunaux de Montréal, Québec.
             </p>
           </section>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              7. Limitation de responsabilité
-            </h2>
-            <p className="text-white/60 leading-relaxed">
-              Spotbook agit en tant qu&apos;intermédiaire technologique. Nous ne sommes pas responsables de la qualité des services fournis par les prestataires, des dommages résultant d&apos;une prestation, ni des litiges entre clients et prestataires. Notre responsabilité totale envers vous ne saurait excéder le montant des frais que vous avez payés à Spotbook au cours des 12 derniers mois.
+          {/* Dispute Resolution */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">10. Résolution des litiges</h2>
+            <p>
+              Avant d&apos;engager une action en justice, les parties acceptent de chercher à résoudre
+              les différends par voie amiable. Veuillez contacter support_spotbook@gmail.com avec
+              les détails de votre réclamation.
+            </p>
+            <p className="mt-4">
+              Si le différend ne peut être résolu à l&apos;amiable dans les 30 jours, soit une partie
+              peut initier une procédure juridique.
             </p>
           </section>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              8. Résiliation
-            </h2>
-            <p className="text-white/60 leading-relaxed">
-              Vous pouvez supprimer votre compte à tout moment depuis les paramètres de l&apos;application. Spotbook se réserve le droit de suspendre ou résilier votre compte en cas de violation des présentes conditions, de fraude, ou de comportement nuisible envers d&apos;autres utilisateurs.
+          {/* Contact */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">11. Nous contacter</h2>
+            <p>
+              Pour toute question concernant ces Conditions ou votre utilisation de Spotbook&nbsp;:
+            </p>
+            <div className="mt-4 p-4 bg-brand-card border border-brand-border rounded-lg">
+              <p className="font-semibold text-brand-text">Spotbook</p>
+              <p className="text-brand-muted">
+                Email :{' '}
+                <a href="mailto:support_spotbook@gmail.com" className="text-brand-green hover:underline">
+                  support_spotbook@gmail.com
+                </a>
+              </p>
+              <p className="text-brand-muted">Montréal, Québec, Canada</p>
+            </div>
+          </section>
+
+          {/* Changes */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">12. Modifications des conditions</h2>
+            <p>
+              Spotbook peut modifier ces Conditions à tout moment. Si des modifications importantes
+              sont apportées, nous vous notifierons par email au moins 14 jours avant que les
+              modifications n&apos;entrent en vigueur.
             </p>
           </section>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              9. Droit applicable
-            </h2>
-            <p className="text-white/60 leading-relaxed">
-              Les présentes conditions sont régies par les lois de la Province de Québec, Canada. Tout litige sera soumis à la compétence exclusive des tribunaux du district judiciaire de Montréal.
+          {/* Severability */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">13. Clause de divisibilité</h2>
+            <p>
+              Si une disposition de ces Conditions est jugée invalide ou inapplicable, cette
+              disposition sera modifiée au minimum nécessaire pour la rendre valide, ou sinon
+              supprimée. Les autres dispositions resteront en vigueur.
             </p>
           </section>
+        </div>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              10. Contact
-            </h2>
-            <p className="text-white/60 leading-relaxed">
-              Pour toute question relative aux présentes conditions, contactez-nous à{" "}
-              <a href="mailto:legal@getspotbook.app" className="text-violet-400 hover:text-violet-300">
-                legal@getspotbook.app
-              </a>.
-            </p>
-          </section>
-        </article>
-      </main>
-      <Footer />
-    </>
-  );
+        {/* Navigation */}
+        <div className="mt-12 pt-8 border-t border-brand-border flex gap-4">
+          <Link
+            href="/privacy"
+            className="px-6 py-3 bg-brand-card border border-brand-border text-brand-text rounded-xl hover:border-brand-green transition"
+          >
+            Politique de confidentialité
+          </Link>
+          <Link
+            href="/support"
+            className="px-6 py-3 bg-brand-green text-white rounded-xl hover:bg-brand-green/90 transition"
+          >
+            Support
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
 }

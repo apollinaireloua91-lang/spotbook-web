@@ -1,140 +1,288 @@
-import { Metadata } from "next";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: "Politique de confidentialité",
-  description: "Politique de confidentialité de Spotbook — Découvrez comment nous protégeons vos données personnelles.",
-};
+  title: 'Politique de confidentialité',
+  description: 'Politique de confidentialité de Spotbook - Comment nous protégeons vos données personnelles',
+}
 
 export default function PrivacyPage() {
   return (
-    <>
-      <Header />
-      <main className="pt-24 pb-16 min-h-screen">
-        <article className="max-w-3xl mx-auto px-6 prose prose-invert prose-sm">
-          <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-2 text-white">
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <div className="border-b border-brand-border bg-white py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-4xl font-bold text-brand-text mb-4">
             Politique de confidentialité
           </h1>
-          <p className="text-white/40 mb-12">
-            Dernière mise à jour : 1er avril 2026
+          <p className="text-brand-muted text-lg">
+            Dernière mise à jour : {new Date().toLocaleDateString('fr-CA', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
           </p>
+        </div>
+      </div>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              1. Introduction
-            </h2>
-            <p className="text-white/60 leading-relaxed mb-4">
-              Spotbook Inc. (&laquo; Spotbook &raquo;, &laquo; nous &raquo;, &laquo; notre &raquo;) s&apos;engage à protéger la vie privée de ses utilisateurs. Cette politique de confidentialité décrit les types de renseignements personnels que nous recueillons, comment nous les utilisons, les partageons et les protégeons lorsque vous utilisez notre application mobile et notre site web (collectivement, les &laquo; Services &raquo;).
+      {/* Content */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="prose prose-lg max-w-none text-brand-text space-y-8">
+          {/* Introduction */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">Introduction</h2>
+            <p>
+              Spotbook (&laquo; nous &raquo;, &laquo; notre &raquo;) respecte votre vie privée et s&apos;engage à être transparent
+              concernant la façon dont nous collectons, utilisons et protégeons vos données personnelles.
+              Cette politique explique nos pratiques en matière de confidentialité.
             </p>
           </section>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              2. Données collectées
-            </h2>
-            <p className="text-white/60 leading-relaxed mb-4">
-              Nous recueillons les catégories de données suivantes :
-            </p>
-            <ul className="list-disc list-inside text-white/60 space-y-2">
-              <li><strong className="text-white/80">Informations de profil :</strong> nom, prénom, adresse courriel, numéro de téléphone, photo de profil, biographie, catégorie professionnelle.</li>
-              <li><strong className="text-white/80">Données de paiement :</strong> traitées via Stripe Connect. Nous ne stockons jamais vos informations de carte bancaire. Stripe agit comme sous-traitant PCI DSS Level 1.</li>
-              <li><strong className="text-white/80">Données de localisation :</strong> ville et zone géographique (jamais de GPS précis sans consentement explicite).</li>
-              <li><strong className="text-white/80">Contenu vidéo :</strong> vidéos publiées par les prestataires, hébergées via Cloudflare Stream.</li>
-              <li><strong className="text-white/80">Données d&apos;utilisation :</strong> interactions avec l&apos;application, réservations, avis, messages.</li>
-              <li><strong className="text-white/80">Données techniques :</strong> type d&apos;appareil, système d&apos;exploitation, adresse IP, identifiants de session.</li>
+          {/* Data Collection */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">1. Données que nous collectons</h2>
+            <p>Nous collectons les types de données suivants :</p>
+
+            <div className="mt-4 space-y-4 pl-4 border-l-4 border-brand-green">
+              <div>
+                <h3 className="font-semibold text-brand-text">Informations de profil</h3>
+                <p className="text-brand-muted">
+                  Nom, adresse email, numéro de téléphone, photo de profil, localisation, bio
+                  et catégorie professionnelle (pour les professionnels).
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Données de paiement</h3>
+                <p className="text-brand-muted">
+                  Informations de transaction traitées via Stripe. Nous ne stockons pas les
+                  numéros de carte de crédit complets.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Données de localisation</h3>
+                <p className="text-brand-muted">
+                  Localisation approximative pour les recherches de services (collectée uniquement
+                  avec votre consentement sur mobile).
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Contenu vidéo</h3>
+                <p className="text-brand-muted">
+                  Vidéos, images et métadonnées hébergées via Cloudflare Stream.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Données d&apos;utilisation</h3>
+                <p className="text-brand-muted">
+                  Interactions avec l&apos;application, vues vidéo, réservations, historique de recherche
+                  (collectées automatiquement).
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* How We Use Data */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">2. Comment nous utilisons vos données</h2>
+            <ul className="space-y-2 list-disc pl-6">
+              <li><strong>Fourniture de services :</strong> Traiter les réservations, les paiements et les services commandés</li>
+              <li><strong>Communication :</strong> Envoyer des confirmations, mises à jour et notifications importantes</li>
+              <li><strong>Amélioration :</strong> Analyser l&apos;utilisation pour améliorer nos fonctionnalités et expérience utilisateur</li>
+              <li><strong>Marketing :</strong> Envoyer des newsletters et promotions (avec votre consentement)</li>
+              <li><strong>Sécurité :</strong> Prévenir la fraude, appliquer nos conditions d&apos;utilisation et protéger vos droits</li>
+              <li><strong>Conformité légale :</strong> Respecter les obligations légales et réglementaires</li>
             </ul>
           </section>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              3. Utilisation des données
-            </h2>
-            <p className="text-white/60 leading-relaxed mb-4">
-              Vos données sont utilisées pour :
+          {/* Third Parties */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">3. Partage avec des tiers</h2>
+            <p>Nous partageons vos données avec les services tiers suivants :</p>
+
+            <div className="mt-4 space-y-3 pl-4 border-l-4 border-brand-green">
+              <div>
+                <h3 className="font-semibold text-brand-text">Supabase</h3>
+                <p className="text-brand-muted">
+                  Base de données PostgreSQL hébergée pour les profils, services et événements.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Stripe</h3>
+                <p className="text-brand-muted">
+                  Traitement sécurisé des paiements. Stripe ne reçoit que les informations
+                  strictement nécessaires à la transaction.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Cloudflare Stream</h3>
+                <p className="text-brand-muted">
+                  Hébergement et diffusion de contenu vidéo. Collecte les données de visualisation.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Firebase</h3>
+                <p className="text-brand-muted">
+                  Notifications push et analytiques (si utilisé dans l&apos;application mobile).
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-brand-text">Google Analytics</h3>
+                <p className="text-brand-muted">
+                  Analyse d&apos;utilisation du site web (données agrégées et anonymisées).
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-4">
+              Nous exigeons que tous les tiers se conforment à nos normes de confidentialité
+              et ne partagent vos données qu&apos;aux fins spécifiées.
             </p>
-            <ul className="list-disc list-inside text-white/60 space-y-2">
-              <li>Fournir, maintenir et améliorer nos Services</li>
-              <li>Traiter les réservations et les paiements</li>
-              <li>Personnaliser votre expérience (feed vidéo, recommandations)</li>
-              <li>Faciliter la communication entre clients et prestataires</li>
-              <li>Envoyer des notifications relatives à vos réservations et événements</li>
-              <li>Prévenir la fraude et assurer la sécurité de la plateforme</li>
-              <li>Respecter nos obligations légales</li>
+          </section>
+
+          {/* User Rights */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">4. Vos droits</h2>
+            <p>
+              Vous avez les droits suivants concernant vos données personnelles, conformément au
+              Règlement général sur la protection des données (RGPD) et à la Loi 25 du Québec
+              (Loi sur la protection des renseignements personnels) :
+            </p>
+
+            <ul className="space-y-2 list-disc pl-6 mt-4">
+              <li><strong>Droit d&apos;accès :</strong> Demander une copie de vos données personnelles</li>
+              <li><strong>Droit de rectification :</strong> Corriger les données inexactes</li>
+              <li><strong>Droit à l&apos;effacement :</strong> Demander la suppression de vos données (&laquo; droit à l&apos;oubli &raquo;)</li>
+              <li><strong>Droit à la portabilité :</strong> Recevoir vos données dans un format lisible par machine</li>
+              <li><strong>Droit d&apos;opposition :</strong> Vous opposer au traitement de vos données</li>
+              <li><strong>Droit de retrait du consentement :</strong> Retirer votre consentement à tout moment</li>
             </ul>
-          </section>
 
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              4. Tiers et sous-traitants
-            </h2>
-            <p className="text-white/60 leading-relaxed mb-4">
-              Nous partageons vos données avec les tiers suivants, strictement dans le cadre de la fourniture de nos Services :
-            </p>
-            <ul className="list-disc list-inside text-white/60 space-y-2">
-              <li><strong className="text-white/80">Supabase :</strong> hébergement de la base de données (PostgreSQL).</li>
-              <li><strong className="text-white/80">Stripe :</strong> traitement des paiements et gestion des comptes connectés.</li>
-              <li><strong className="text-white/80">Cloudflare :</strong> hébergement vidéo (Stream) et réseau de diffusion de contenu.</li>
-              <li><strong className="text-white/80">Firebase (Google) :</strong> notifications push et analytique.</li>
-              <li><strong className="text-white/80">Google Maps :</strong> services de géolocalisation et cartographie.</li>
-            </ul>
-          </section>
-
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              5. Vos droits
-            </h2>
-            <p className="text-white/60 leading-relaxed mb-4">
-              Conformément au Règlement général sur la protection des données (RGPD) et à la Loi 25 du Québec (Loi sur la protection des renseignements personnels dans le secteur privé), vous disposez des droits suivants :
-            </p>
-            <ul className="list-disc list-inside text-white/60 space-y-2">
-              <li><strong className="text-white/80">Droit d&apos;accès :</strong> obtenir une copie de vos données personnelles.</li>
-              <li><strong className="text-white/80">Droit de rectification :</strong> corriger des données inexactes ou incomplètes.</li>
-              <li><strong className="text-white/80">Droit à l&apos;effacement :</strong> demander la suppression de vos données.</li>
-              <li><strong className="text-white/80">Droit à la portabilité :</strong> recevoir vos données dans un format structuré et lisible.</li>
-              <li><strong className="text-white/80">Droit d&apos;opposition :</strong> vous opposer au traitement de vos données à des fins de marketing.</li>
-              <li><strong className="text-white/80">Droit de retrait du consentement :</strong> retirer votre consentement à tout moment.</li>
-            </ul>
-            <p className="text-white/60 leading-relaxed mt-4">
-              Pour exercer ces droits, contactez-nous à{" "}
-              <a href="mailto:privacy@getspotbook.app" className="text-violet-400 hover:text-violet-300">
-                privacy@getspotbook.app
-              </a>.
-            </p>
-          </section>
-
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              6. Conservation des données
-            </h2>
-            <p className="text-white/60 leading-relaxed">
-              Nous conservons vos données personnelles aussi longtemps que votre compte est actif ou que cela est nécessaire pour fournir nos Services. Après la suppression de votre compte, vos données seront effacées dans un délai de 30 jours, sauf obligation légale de conservation plus longue (ex. : données fiscales conservées 7 ans).
-            </p>
-          </section>
-
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              7. Cookies et technologies similaires
-            </h2>
-            <p className="text-white/60 leading-relaxed">
-              Notre site web utilise des cookies essentiels au fonctionnement du service et des cookies analytiques (avec votre consentement) pour améliorer votre expérience. Vous pouvez gérer vos préférences de cookies à tout moment via les paramètres de votre navigateur.
-            </p>
-          </section>
-
-          <section className="mb-10">
-            <h2 className="font-display text-xl font-semibold mb-4 text-white">
-              8. Contact
-            </h2>
-            <p className="text-white/60 leading-relaxed">
-              Pour toute question relative à cette politique de confidentialité, veuillez nous contacter à :{" "}
-              <a href="mailto:privacy@getspotbook.app" className="text-violet-400 hover:text-violet-300">
-                privacy@getspotbook.app
+            <p className="mt-4">
+              Pour exercer ces droits, veuillez nous contacter à&nbsp;:{' '}
+              <a href="mailto:support_spotbook@gmail.com" className="text-brand-green hover:underline">
+                support_spotbook@gmail.com
               </a>
             </p>
           </section>
-        </article>
-      </main>
-      <Footer />
-    </>
-  );
+
+          {/* Data Retention */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">5. Durée de conservation des données</h2>
+            <p>
+              Nous conservons vos données personnelles aussi longtemps que nécessaire pour
+              fournir nos services et respecter nos obligations légales :
+            </p>
+            <ul className="space-y-2 list-disc pl-6 mt-4">
+              <li><strong>Comptes actifs :</strong> Tant que votre compte est actif</li>
+              <li><strong>Données de paiement :</strong> 7 ans pour conformité fiscale (Stripe)</li>
+              <li><strong>Données de marketing :</strong> Jusqu&apos;au retrait du consentement</li>
+              <li><strong>Historique des services :</strong> 3 ans après la dernière transaction</li>
+            </ul>
+          </section>
+
+          {/* Cookies */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">6. Cookies et technologies similaires</h2>
+            <p>
+              Notre site web utilise des cookies pour améliorer votre expérience. Les types de
+              cookies que nous utilisons incluent :
+            </p>
+            <ul className="space-y-2 list-disc pl-6 mt-4">
+              <li><strong>Cookies essentiels :</strong> Nécessaires pour le fonctionnement du site</li>
+              <li><strong>Cookies analytiques :</strong> Pour comprendre comment vous utilisez notre site</li>
+              <li><strong>Cookies de préférences :</strong> Pour mémoriser vos paramètres</li>
+            </ul>
+            <p className="mt-4">
+              Vous pouvez gérer vos préférences de cookies via les paramètres de votre navigateur.
+            </p>
+          </section>
+
+          {/* Security */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">7. Sécurité des données</h2>
+            <p>
+              Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles pour
+              protéger vos données contre l&apos;accès non autorisé, la modification, la divulgation ou
+              la destruction :
+            </p>
+            <ul className="space-y-2 list-disc pl-6 mt-4">
+              <li>Chiffrement SSL/TLS pour toutes les communications</li>
+              <li>Authentification sécurisée des comptes</li>
+              <li>Stockage des données dans des serveurs sécurisés</li>
+              <li>Audit de sécurité régulier</li>
+            </ul>
+            <p className="mt-4">
+              Toutefois, aucune transmission de données sur Internet n&apos;est 100 % sécurisée.
+            </p>
+          </section>
+
+          {/* International Transfers */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">8. Transferts internationaux</h2>
+            <p>
+              Vos données peuvent être transférées, stockées et traitées dans des pays autres que
+              le Canada, notamment aux États-Unis (Supabase, Stripe, Google, Cloudflare). Ces pays
+              peuvent avoir des lois de protection des données différentes. En utilisant Spotbook,
+              vous consentez à de tels transferts.
+            </p>
+          </section>
+
+          {/* Children */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">9. Enfants</h2>
+            <p>
+              Spotbook n&apos;est pas destinée aux personnes de moins de 18 ans. Nous ne collectons
+              intentionnellement pas de données personnelles auprès des enfants. Si nous découvrons
+              qu&apos;un enfant nous a fourni des données personnelles, nous les supprimerons rapidement.
+            </p>
+          </section>
+
+          {/* Contact */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">10. Nous contacter</h2>
+            <p>
+              Si vous avez des questions sur cette politique de confidentialité ou vos données
+              personnelles, veuillez nous contacter&nbsp;:
+            </p>
+            <div className="mt-4 p-4 bg-brand-card border border-brand-border rounded-lg">
+              <p className="font-semibold text-brand-text">Spotbook</p>
+              <p className="text-brand-muted">
+                Email :{' '}
+                <a href="mailto:support_spotbook@gmail.com" className="text-brand-green hover:underline">
+                  support_spotbook@gmail.com
+                </a>
+              </p>
+              <p className="text-brand-muted">Montréal, Québec, Canada</p>
+            </div>
+          </section>
+
+          {/* Changes */}
+          <section>
+            <h2 className="text-2xl font-bold text-brand-text mb-4">11. Modifications de cette politique</h2>
+            <p>
+              Nous pouvons mettre à jour cette politique de confidentialité à tout moment. Les
+              modifications importantes seront communiquées par email ou via une notification
+              éminente sur notre site.
+            </p>
+          </section>
+        </div>
+
+        {/* Navigation */}
+        <div className="mt-12 pt-8 border-t border-brand-border flex gap-4">
+          <Link
+            href="/terms"
+            className="px-6 py-3 bg-brand-card border border-brand-border text-brand-text rounded-xl hover:border-brand-green transition"
+          >
+            Conditions d&apos;utilisation
+          </Link>
+          <Link
+            href="/support"
+            className="px-6 py-3 bg-brand-green text-white rounded-xl hover:bg-brand-green/90 transition"
+          >
+            Support
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
 }

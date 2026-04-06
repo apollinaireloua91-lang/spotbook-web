@@ -1,31 +1,25 @@
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import Hero from "@/components/landing/Hero";
-import SocialProof from "@/components/landing/SocialProof";
-import HowItWorks from "@/components/landing/HowItWorks";
-import FeatureGrid from "@/components/landing/FeatureGrid";
-import ForPros from "@/components/landing/ForPros";
-import Testimonials from "@/components/landing/Testimonials";
-import DownloadCTA from "@/components/landing/DownloadCTA";
-import CursorGlow from "@/components/ui/CursorGlow";
-import LoadingScreen from "@/components/ui/LoadingScreen";
+'use client'
 
-export default function Home() {
+import HeroSection from '@/components/landing/HeroSection'
+import SocialProofBar from '@/components/landing/SocialProofBar'
+import HowItWorks from '@/components/landing/HowItWorks'
+import FeatureGrid from '@/components/landing/FeatureGrid'
+import CategoriesRibbon from '@/components/landing/CategoriesRibbon'
+import ForProfessionals from '@/components/landing/ForProfessionals'
+import Testimonials from '@/components/landing/Testimonials'
+import DownloadCTA from '@/components/landing/DownloadCTA'
+
+export default function HomePage() {
   return (
     <>
-      <LoadingScreen />
-      <CursorGlow />
-      <Header />
-      <main>
-        <Hero />
-        <SocialProof />
-        <HowItWorks />
-        <FeatureGrid />
-        <ForPros />
-        <Testimonials />
-        <DownloadCTA />
-      </main>
-      <Footer />
+      <HeroSection />
+      <SocialProofBar />
+      <HowItWorks />
+      <FeatureGrid />
+      <CategoriesRibbon />
+      <ForProfessionals />
+      <Testimonials />
+      <DownloadCTA />
     </>
-  );
+  )
 }

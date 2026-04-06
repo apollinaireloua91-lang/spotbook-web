@@ -1,193 +1,284 @@
-export const runtime = "edge";
+import { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
+import { supabase, Video } from '@/lib/supabase'
+import AppStoreButtons from '@/components/ui/AppStoreButtons'
 
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { supabase, type Video, type Profile } from "@/lib/supabase";
-import { truncate, APP_STORE_URL } from "@/lib/utils";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-
-interface Props {
-  params: Promise<{ id: string }>;
-}
-
-async function getVideo(id: string): Promise<(Video & { profile: Profile }) | null> {
-  if (!supabase) return null;
-  const { data, error } = await supabase
-    .from("videos")
-    .select("*, profile:profiles_pro(*)")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) return null;
-  return data as Video & { profile: Profile };
-}
-
-async function getRelatedVideos(profileId: string, excludeId: string): Promise<Video[]> {
-  if (!supabase) return [];
-  const { data } = await supabase
-    .from("videos")
-    .select("*, profile:profiles_pro(username, full_name, avatar_url)")
-    .eq("profile_id", profileId)
-    .neq("id", excludeId)
-    .limit(6);
-  return (data || []) as Video[];
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
-  const video = await getVideo(id);
-  if (!video) return { title: "Vidéo introuvable" };
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const video = await fetchVideo(id)
 
   return {
-    title: `${video.title} par ${video.profile.full_name}`,
-    description: truncate(video.description || `Vidéo de ${video.profile.full_name} sur Spotbook`, 160),
+    title: video?.title || 'Vidéo',
+    description: video?.description || 'Découvrez cette vidéo sur Spotbook',
     openGraph: {
-      title: `${video.title} | Spotbook`,
-      description: truncate(video.description || "", 160),
-      type: "video.other",
-      images: video.thumbnail_url ? [{ url: video.thumbnail_url }] : [],
+      title: video?.title,
+      description: video?.description || undefined,
+      images: video?.thumbnail_url ? [{ url: video.thumbnail_url }] : [],
     },
-  };
+  }
 }
 
-export default async function VideoPage({ params }: Props) {
-  const { id } = await params;
-  const video = await getVideo(id);
-  if (!video) notFound();
+const DEMO_VIDEO: Video = {
+  id: '1',
+  pro_id: 'pro_1',
+  cloudflare_video_id: 'd79344ca41959e21201022b1624696e5',
+  title: 'Coupe de cheveux tendance - Tutoriel',
+  description: 'Découvrez comment réaliser une coupe moderne et stylée avec les bons outils. Dans cette vidéo, je vous montre les techniques essentielles pour obtenir un résultat professionnel à la maison.',
+  tags: ['coiffure', 'tutoriel', 'coupe', 'tendance'],
+  thumbnail_url: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=400&h=225&fit=crop',
+  view_count: 2341,
+  created_at: '2024-03-15',
+  pro: {
+    id: 'pro_1',
+    username: 'alex_coiffeur',
+    full_name: 'Alex Chen',
+    avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+    cover_url: null,
+    bio: 'Coiffeur professionnel avec 10 ans d&apos;expérience. Spécialisé en coupes modernes et coloration.',
+    category: 'Coiffure',
+    location: 'Montréal, QC',
+    rating: 4.9,
+    review_count: 142,
+    booking_count: 520,
+    follower_count: 1280,
+    is_verified: true,
+    social_links: {
+      instagram: 'alex_coiffeur',
+    },
+    created_at: '2023-01-15',
+  },
+}
 
-  const relatedVideos = await getRelatedVideos(video.profile_id, video.id);
+const DEMO_RELATED_VIDEOS: Video[] = [
+  {
+    id: '2',
+    pro_id: 'pro_1',
+    cloudflare_video_id: 'a79344ca41959e21201022b1624696e6',
+    title: 'Coloration cheveux - Guide complet',
+    description: 'Tout ce que vous devez savoir sur la coloration des cheveux',
+    tags: ['coloration', 'couleur', 'soin'],
+    thumbnail_url: 'https://images.unsplash.com/photo-1559599810-46d1d26b13af?w=400&h=225&fit=crop',
+    view_count: 1850,
+    created_at: '2024-03-10',
+  },
+  {
+    id: '3',
+    pro_id: 'pro_1',
+    cloudflare_video_id: 'b79344ca41959e21201022b1624696e7',
+    title: 'Soin des cheveux - Astuces au quotidien',
+    description: 'Les meilleures pratiques pour prendre soin de vos cheveux',
+    tags: ['soin', 'cheveux', 'beauté'],
+    thumbnail_url: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=225&fit=crop',
+    view_count: 1620,
+    created_at: '2024-03-05',
+  },
+  {
+    id: '4',
+    pro_id: 'pro_2',
+    cloudflare_video_id: 'c79344ca41959e21201022b1624696e8',
+    title: 'Photographie portrait - Lumière naturelle',
+    description: 'Apprenez à utiliser la lumière naturelle pour des portraits magnifiques',
+    tags: ['photographie', 'portrait', 'lumière'],
+    thumbnail_url: 'https://images.unsplash.com/photo-1606011591437-51c77e271583?w=400&h=225&fit=crop',
+    view_count: 3120,
+    created_at: '2024-02-28',
+  },
+]
+
+async function fetchVideo(id: string): Promise<Video | null> {
+  if (!supabase) {
+    return DEMO_VIDEO
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('videos')
+      .select(`
+        *,
+        pro:pro_profiles(*)
+      `)
+      .eq('id', id)
+      .single()
+
+    if (error || !data) {
+      return DEMO_VIDEO
+    }
+
+    return data as Video
+  } catch {
+    return DEMO_VIDEO
+  }
+}
+
+async function fetchRelatedVideos(proId: string): Promise<Video[]> {
+  if (!supabase) {
+    return DEMO_RELATED_VIDEOS
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('videos')
+      .select(`
+        *,
+        pro:pro_profiles(*)
+      `)
+      .eq('pro_id', proId)
+      .limit(3)
+
+    if (error || !data) {
+      return DEMO_RELATED_VIDEOS
+    }
+
+    return data as Video[]
+  } catch {
+    return DEMO_RELATED_VIDEOS
+  }
+}
+
+export default async function VideoPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const video = await fetchVideo(id)
+  const relatedVideos = video?.pro ? await fetchRelatedVideos(video.pro.id) : DEMO_RELATED_VIDEOS
+
+  if (!video) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-brand-text text-lg mb-4">Vidéo non trouvée</p>
+          <Link href="/explore" className="text-brand-green hover:underline">
+            Retour à l&apos;exploration
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <>
-      <Header />
-      <main className="pt-24 pb-16 min-h-screen">
-        <div className="max-w-5xl mx-auto px-6">
-          {/* Video player */}
-          <div className="aspect-video rounded-2xl overflow-hidden bg-white/5 mb-8">
-            <iframe
-              src={`https://customer-placeholder.cloudflarestream.com/${video.cloudflare_video_id}/iframe?autoplay=true`}
-              className="w-full h-full"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Video info */}
-            <div className="flex-1">
-              <h1 className="font-display text-2xl md:text-3xl font-bold mb-4">
-                {video.title}
-              </h1>
-
-              {/* Pro info */}
-              <Link
-                href={`/pro/${video.profile.username}`}
-                className="flex items-center gap-3 mb-6 group"
-              >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500/30 to-rose-500/30 overflow-hidden">
-                  {video.profile.avatar_url ? (
-                    <img
-                      src={video.profile.avatar_url}
-                      alt={video.profile.full_name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-sm font-bold text-white/50">
-                      {video.profile.full_name.charAt(0)}
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <p className="font-semibold group-hover:text-violet-400 transition-colors">
-                    {video.profile.full_name}
-                  </p>
-                  <p className="text-xs text-white/40">
-                    {video.profile.category}
-                  </p>
-                </div>
-              </Link>
-
-              {video.description && (
-                <p className="text-white/50 leading-relaxed mb-6">
-                  {video.description}
-                </p>
-              )}
-
-              {video.tags && video.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {video.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 rounded-full glass text-xs text-white/50"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              <a
-                href={APP_STORE_URL}
-                className="inline-block px-6 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-rose-500 font-medium text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all"
-              >
-                Réserver ce service dans l&apos;app
-              </a>
-            </div>
-
-            {/* Related videos */}
-            {relatedVideos.length > 0 && (
-              <div className="w-full md:w-80 flex-shrink-0">
-                <h3 className="text-sm font-semibold text-white/60 mb-4">
-                  Plus de vidéos
-                </h3>
-                <div className="space-y-3">
-                  {relatedVideos.map((rv) => (
-                    <Link
-                      key={rv.id}
-                      href={`/video/${rv.id}`}
-                      className="flex gap-3 group"
-                    >
-                      <div className="w-28 aspect-video rounded-lg bg-white/5 overflow-hidden flex-shrink-0">
-                        {rv.thumbnail_url ? (
-                          <img
-                            src={rv.thumbnail_url}
-                            alt={rv.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <svg
-                              className="w-5 h-5 text-white/20"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-                              />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium line-clamp-2 group-hover:text-violet-400 transition-colors">
-                          {rv.title}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Video Player */}
+        <div className="mb-8 rounded-2xl overflow-hidden bg-brand-card/50 border border-brand-border aspect-video">
+          <iframe
+            src={`https://customer-h264ptvhh9jzqj0j.cloudflarestream.com/${video.cloudflare_video_id}/iframe`}
+            loading="lazy"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+            allowFullScreen
+            className="w-full h-full"
+          />
         </div>
-      </main>
-      <Footer />
-    </>
-  );
+
+        {/* Video Title & Info */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-brand-text mb-4">{video.title}</h1>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {video.tags?.map((tag) => (
+              <span
+                key={tag}
+                className="px-3 py-1 bg-brand-card border border-brand-border text-brand-text text-sm rounded-full"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+
+          {/* View Count */}
+          <p className="text-brand-muted text-sm mb-6">
+            {video.view_count?.toLocaleString('fr-CA') || 0} vues
+          </p>
+        </div>
+
+        {/* Pro Info Card */}
+        {video.pro && (
+          <div className="mb-8 p-6 bg-brand-card border border-brand-border rounded-2xl flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {video.pro.avatar_url && (
+                <Image
+                  src={video.pro.avatar_url}
+                  alt={video.pro.full_name}
+                  width={80}
+                  height={80}
+                  className="rounded-full object-cover"
+                />
+              )}
+              <div>
+                <Link
+                  href={`/pro/${video.pro.username}`}
+                  className="text-xl font-semibold text-brand-text hover:text-brand-green transition"
+                >
+                  {video.pro.full_name}
+                </Link>
+                <p className="text-brand-muted text-sm">{video.pro.category}</p>
+                <p className="text-brand-muted text-sm mt-1">
+                  ⭐ {video.pro.rating.toFixed(1)} ({video.pro.review_count} avis)
+                </p>
+              </div>
+            </div>
+            <Link
+              href={`/pro/${video.pro.username}`}
+              className="px-6 py-3 bg-brand-green text-white rounded-xl font-semibold hover:bg-brand-green/90 transition"
+            >
+              Visiter le profil
+            </Link>
+          </div>
+        )}
+
+        {/* Description */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-brand-text mb-4">À propos</h2>
+          <p className="text-brand-text leading-relaxed whitespace-pre-wrap">
+            {video.description}
+          </p>
+        </div>
+
+        {/* CTA */}
+        <div className="mb-12 p-6 bg-brand-card border border-brand-border rounded-2xl">
+          <h3 className="text-xl font-bold text-brand-text mb-4">
+            Intéressé par ce service ?
+          </h3>
+          <p className="text-brand-muted mb-6">
+            Téléchargez l&apos;app Spotbook pour réserver directement avec ce professionnel.
+          </p>
+          <AppStoreButtons />
+        </div>
+
+        {/* Related Videos */}
+        {relatedVideos.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-2xl font-bold text-brand-text mb-6">Vidéos associées</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {relatedVideos.slice(0, 3).map((relatedVideo) => (
+                <Link
+                  key={relatedVideo.id}
+                  href={`/video/${relatedVideo.id}`}
+                  className="group rounded-xl overflow-hidden border border-brand-border hover:border-brand-green transition"
+                >
+                  <div className="relative aspect-video bg-brand-card/50 overflow-hidden">
+                    {relatedVideo.thumbnail_url && (
+                      <Image
+                        src={relatedVideo.thumbnail_url}
+                        alt={relatedVideo.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition duration-300"
+                      />
+                    )}
+                  </div>
+                  <div className="p-4 bg-white">
+                    <h3 className="font-semibold text-brand-text group-hover:text-brand-green transition line-clamp-2">
+                      {relatedVideo.title}
+                    </h3>
+                    <p className="text-brand-muted text-sm mt-2">
+                      {relatedVideo.view_count?.toLocaleString('fr-CA') || 0} vues
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
 }

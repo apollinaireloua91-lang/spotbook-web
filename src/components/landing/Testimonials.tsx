@@ -1,132 +1,123 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import ScrollReveal from '@/components/ui/ScrollReveal'
+import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react'
 
 const testimonials = [
   {
-    quote: "J'ai double ma clientele en 3 mois grace aux videos.",
-    name: "Sarah K.",
-    role: "Coiffeuse",
+    name: 'Sarah K.',
+    role: 'Coiffeuse',
+    text: "Depuis que j'utilise Spotbook, j'ai doublé ma clientèle en 3 mois. L'interface est intuitive et mes clientes adorent réserver directement après avoir vu mes créations.",
     rating: 5,
-    initials: "SK",
+    avatar: 'S',
   },
   {
-    quote: "Mes clients reservent directement apres avoir vu mon travail.",
-    name: "Marcus R.",
-    role: "Barber",
+    name: 'Marcus R.',
+    role: 'Barber',
+    text: "L'app est incroyable. Mes clients réservent directement après avoir vu mes vidéos. Le dashboard me permet de tout gérer depuis mon téléphone.",
     rating: 5,
-    initials: "MR",
+    avatar: 'M',
   },
   {
-    quote: "200 billets vendus pour mon premier evenement.",
-    name: "DJ Nova",
-    role: "DJ & Producteur",
+    name: 'DJ Nova',
+    role: 'DJ & Producteur',
+    text: "J'ai organisé mon premier événement sur Spotbook et vendu 200 billets en une semaine. La billetterie avec QR code est vraiment pratique.",
     rating: 5,
-    initials: "DN",
+    avatar: 'D',
   },
-];
+  {
+    name: 'Amina L.',
+    role: 'Photographe',
+    text: "Spotbook a transformé mon business. Le feed vidéo me permet de montrer mon portfolio de manière dynamique et les réservations arrivent toutes seules.",
+    rating: 5,
+    avatar: 'A',
+  },
+]
 
 export default function Testimonials() {
-  const [active, setActive] = useState(0);
+  const [current, setCurrent] = useState(0)
 
-  // Auto-advance every 5s
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActive((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+  const next = () => setCurrent((c) => (c + 1) % testimonials.length)
+  const prev = () => setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length)
 
   return (
-    <section className="py-24 md:py-40 relative">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-violet-500/[0.03] rounded-full blur-[150px] pointer-events-none" />
-
+    <section className="py-24 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
-        >
-          <h2 className="font-display text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-white">
+        <ScrollReveal className="text-center mb-16">
+          <h2 className="font-display text-4xl sm:text-5xl font-bold text-brand-text mb-4">
             Ce qu&apos;ils en disent
           </h2>
-          <p className="text-white/30 text-base md:text-lg">
-            Des professionnels qui ont transforme leur activite
+          <p className="text-brand-muted text-lg">
+            Des professionnels qui font confiance à Spotbook
           </p>
-        </motion.div>
+        </ScrollReveal>
 
-        <div className="max-w-3xl mx-auto">
-          <div className="relative min-h-[260px] flex items-center justify-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                className="text-center"
-              >
-                {/* Avatar */}
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-violet-500/20 to-rose-500/20 border border-white/[0.08] flex items-center justify-center mx-auto mb-6">
-                  <span className="text-sm font-bold text-white/60">
-                    {testimonials[active].initials}
-                  </span>
+        <div className="max-w-3xl mx-auto relative">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              initial={{ opacity: 0, x: 60 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -60 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="glass-card p-10 sm:p-14 text-center relative"
+            >
+              <Quote size={40} className="text-brand-green/10 mx-auto mb-6" />
+
+              <p className="text-xl sm:text-2xl text-brand-text leading-relaxed mb-8 font-light">
+                &ldquo;{testimonials[current].text}&rdquo;
+              </p>
+
+              <div className="flex items-center justify-center gap-1 mb-4">
+                {Array.from({ length: testimonials[current].rating }).map((_, i) => (
+                  <Star key={i} size={18} className="fill-brand-green text-brand-green" />
+                ))}
+              </div>
+
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-brand-green flex items-center justify-center text-white font-bold text-lg">
+                  {testimonials[current].avatar}
                 </div>
-
-                {/* Stars */}
-                <div className="flex justify-center gap-1 mb-6">
-                  {Array.from({ length: testimonials[active].rating }).map(
-                    (_, i) => (
-                      <svg
-                        key={i}
-                        className="w-4 h-4 text-yellow-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    )
-                  )}
+                <div className="text-left">
+                  <div className="font-semibold text-brand-text">{testimonials[current].name}</div>
+                  <div className="text-sm text-brand-muted">{testimonials[current].role}</div>
                 </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
-                {/* Quote */}
-                <blockquote className="font-display text-2xl md:text-4xl font-bold leading-snug mb-8 text-white/90 tracking-tight">
-                  &ldquo;{testimonials[active].quote}&rdquo;
-                </blockquote>
+          {/* Controls */}
+          <div className="flex items-center justify-center gap-4 mt-8">
+            <button
+              onClick={prev}
+              className="w-12 h-12 rounded-full bg-brand-card border border-brand-border flex items-center justify-center hover:bg-brand-green/5 transition-colors"
+            >
+              <ChevronLeft size={20} className="text-brand-green" />
+            </button>
 
-                {/* Author */}
-                <div>
-                  <p className="font-semibold text-white/70 text-sm">
-                    {testimonials[active].name}
-                  </p>
-                  <p className="text-xs text-white/30 mt-0.5">
-                    {testimonials[active].role}
-                  </p>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+            <div className="flex gap-2">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(i)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    i === current ? 'w-8 bg-brand-green' : 'w-2 bg-brand-border'
+                  }`}
+                />
+              ))}
+            </div>
 
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-12">
-            {testimonials.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActive(i)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
-                  i === active
-                    ? "bg-white w-8"
-                    : "bg-white/15 w-1.5 hover:bg-white/25"
-                }`}
-                aria-label={`Temoignage ${i + 1}`}
-              />
-            ))}
+            <button
+              onClick={next}
+              className="w-12 h-12 rounded-full bg-brand-card border border-brand-border flex items-center justify-center hover:bg-brand-green/5 transition-colors"
+            >
+              <ChevronRight size={20} className="text-brand-green" />
+            </button>
           </div>
         </div>
       </div>
     </section>
-  );
+  )
 }

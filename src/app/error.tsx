@@ -1,32 +1,34 @@
-"use client";
+'use client'
 
-export default function Error({
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+import { useEffect } from 'react'
+import Link from 'next/link'
+
+export default function Error({ error, reset }: { error: Error; reset: () => void }) {
+  useEffect(() => {
+    console.error(error)
+  }, [error])
+
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-6">
+    <div className="min-h-screen flex items-center justify-center bg-white px-6">
       <div className="text-center max-w-md">
-        <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-violet-500/20 to-rose-500/20 border border-violet-500/20 flex items-center justify-center">
-          <svg className="w-8 h-8 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-          </svg>
+        <div className="w-20 h-20 rounded-3xl bg-brand-card border border-brand-border flex items-center justify-center mx-auto mb-6">
+          <span className="text-3xl">⚠️</span>
         </div>
-        <h2 className="font-display text-2xl font-bold mb-2">
-          Quelque chose s&apos;est mal passé
+        <h2 className="font-display text-2xl font-bold text-brand-text mb-3">
+          Une erreur est survenue
         </h2>
-        <p className="text-white/40 mb-6">
-          Une erreur inattendue est survenue. Veuillez réessayer.
+        <p className="text-brand-muted mb-8">
+          Nous nous excusons pour la gêne occasionnée. Veuillez réessayer.
         </p>
-        <button
-          onClick={reset}
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-rose-500 font-medium text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all"
-        >
-          Réessayer
-        </button>
+        <div className="flex gap-4 justify-center">
+          <button onClick={reset} className="btn-primary">
+            Réessayer
+          </button>
+          <Link href="/" className="btn-secondary">
+            Accueil
+          </Link>
+        </div>
       </div>
     </div>
-  );
+  )
 }

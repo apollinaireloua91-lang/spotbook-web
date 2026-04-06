@@ -1,246 +1,253 @@
-export const runtime = "edge";
+import { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
+import { supabase, Event } from '@/lib/supabase'
+import AppStoreButtons from '@/components/ui/AppStoreButtons'
 
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { supabase, type Event, type Profile } from "@/lib/supabase";
-import { formatPrice, formatDate, formatTime, truncate, APP_STORE_URL } from "@/lib/utils";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-
-interface Props {
-  params: Promise<{ id: string }>;
-}
-
-async function getEvent(id: string): Promise<(Event & { profile: Profile }) | null> {
-  if (!supabase) return null;
-  const { data, error } = await supabase
-    .from("events")
-    .select("*, profile:profiles_pro(*)")
-    .eq("id", id)
-    .single();
-
-  if (error || !data) return null;
-  return data as Event & { profile: Profile };
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
-  const event = await getEvent(id);
-  if (!event) return { title: "Événement introuvable" };
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const event = await fetchEvent(id)
 
   return {
-    title: event.title,
-    description: truncate(
-      event.description || `${event.title} — ${event.venue}, ${formatDate(event.date)}`,
-      160
-    ),
+    title: event?.title || 'Événement',
+    description: event?.description || 'Découvrez cet événement sur Spotbook',
     openGraph: {
-      title: `${event.title} | Spotbook`,
-      description: truncate(event.description || "", 160),
-      images: event.cover_url ? [{ url: event.cover_url }] : [],
+      title: event?.title,
+      description: event?.description || undefined,
+      images: event?.cover_url ? [{ url: event.cover_url }] : [],
     },
-  };
+  }
 }
 
-export default async function EventPage({ params }: Props) {
-  const { id } = await params;
-  const event = await getEvent(id);
-  if (!event) notFound();
+const DEMO_EVENT: Event = {
+  id: '1',
+  pro_id: 'pro_2',
+  title: 'Atelier Photographie - Portrait Professionnel',
+  description: 'Apprenez les fondamentaux de la photographie portrait en 3 heures avec une professionnelle. Au programme : composition, lumière, interaction avec le modèle, et retouche basique.\n\nCet atelier inclut :\n- Exercices pratiques en studio\n- Démonstrations en direct\n- Retours personnalisés sur vos photos\n- Accès à un groupe privé de suivi\n\nTous les niveaux sont bienvenus ! Apportez votre appareil photo ou votre téléphone.',
+  cover_url: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&h=400&fit=crop',
+  venue: 'Studio Lumière MTL',
+  address: '123 rue de la Montagne, Montréal, QC H3G 1Z1',
+  date: '2024-04-15',
+  time: '14:00',
+  price: 89.99,
+  total_tickets: 15,
+  tickets_sold: 8,
+  created_at: '2024-03-01',
+  pro: {
+    id: 'pro_2',
+    username: 'marie_photographie',
+    full_name: 'Marie Dubois',
+    avatar_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
+    cover_url: null,
+    bio: 'Photographe spécialisée en portraits et événements. J&apos;aime capturer vos moments précieux.',
+    category: 'Photographe',
+    location: 'Montréal, QC',
+    rating: 4.8,
+    review_count: 87,
+    booking_count: 310,
+    follower_count: 856,
+    is_verified: true,
+    social_links: {
+      instagram: 'marie_photographie',
+    },
+    created_at: '2023-03-22',
+  },
+}
 
-  const ticketsRemaining = event.tickets_total - event.tickets_sold;
+async function fetchEvent(id: string): Promise<Event | null> {
+  if (!supabase) {
+    return DEMO_EVENT
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('events')
+      .select(`
+        *,
+        pro:pro_profiles(*)
+      `)
+      .eq('id', id)
+      .single()
+
+    if (error || !data) {
+      return DEMO_EVENT
+    }
+
+    return data as Event
+  } catch {
+    return DEMO_EVENT
+  }
+}
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString + 'T00:00:00')
+  return new Intl.DateTimeFormat('fr-CA', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date)
+}
+
+function formatTime(timeString: string): string {
+  const [hours, minutes] = timeString.split(':')
+  return `${hours}h${minutes}`
+}
+
+export default async function EventPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const event = await fetchEvent(id)
+
+  if (!event) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-brand-text text-lg mb-4">Événement non trouvé</p>
+          <Link href="/explore" className="text-brand-green hover:underline">
+            Retour à l&apos;exploration
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  const ticketsRemaining = event.total_tickets - event.tickets_sold
 
   return (
-    <>
-      <Header />
-      <main className="pt-24 pb-16 min-h-screen">
-        <div className="max-w-4xl mx-auto px-6">
-          {/* Cover image */}
-          <div className="aspect-[2/1] rounded-2xl overflow-hidden bg-gradient-to-br from-violet-600/20 to-rose-500/20 mb-8">
-            {event.cover_url ? (
-              <img
-                src={event.cover_url}
-                alt={event.title}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <svg
-                  className="w-16 h-16 text-white/10"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z"
-                  />
-                </svg>
-              </div>
-            )}
+    <div className="min-h-screen bg-white">
+      {/* Cover Image */}
+      {event.cover_url && (
+        <div className="relative w-full h-80 bg-brand-card/50">
+          <Image
+            src={event.cover_url}
+            alt={event.title}
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+      )}
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Title */}
+        <h1 className="text-4xl font-bold text-brand-text mb-6">{event.title}</h1>
+
+        {/* Key Info Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          {/* Date */}
+          <div className="p-4 bg-brand-card border border-brand-border rounded-xl">
+            <p className="text-brand-muted text-sm mb-1">Date</p>
+            <p className="text-lg font-semibold text-brand-text">
+              {formatDate(event.date)}
+            </p>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Event details */}
-            <div className="flex-1">
-              <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-4">
-                {event.title}
-              </h1>
+          {/* Time */}
+          <div className="p-4 bg-brand-card border border-brand-border rounded-xl">
+            <p className="text-brand-muted text-sm mb-1">Heure</p>
+            <p className="text-lg font-semibold text-brand-text">
+              {formatTime(event.time)}
+            </p>
+          </div>
 
-              {/* Date & time */}
-              <div className="flex items-center gap-3 mb-4 text-white/60">
-                <svg
-                  className="w-5 h-5 text-violet-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
-                  />
-                </svg>
-                <span>
-                  {formatDate(event.date)} à {formatTime(event.time)}
-                </span>
-              </div>
-
-              {/* Venue */}
-              <div className="flex items-center gap-3 mb-4 text-white/60">
-                <svg
-                  className="w-5 h-5 text-violet-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-                  />
-                </svg>
-                <div>
-                  <span className="font-medium text-white/80">
-                    {event.venue}
-                  </span>
-                  <span className="mx-2">·</span>
-                  <span>{event.address}</span>
-                </div>
-              </div>
-
-              {/* Organizer */}
-              <Link
-                href={`/pro/${event.profile.username}`}
-                className="flex items-center gap-3 mb-8 group"
-              >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500/30 to-rose-500/30 overflow-hidden">
-                  {event.profile.avatar_url ? (
-                    <img
-                      src={event.profile.avatar_url}
-                      alt={event.profile.full_name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-sm font-bold text-white/50">
-                      {event.profile.full_name.charAt(0)}
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm text-white/40">Organisé par</p>
-                  <p className="font-medium group-hover:text-violet-400 transition-colors">
-                    {event.profile.full_name}
-                  </p>
-                </div>
-              </Link>
-
-              {event.description && (
-                <div className="mb-8">
-                  <h2 className="font-display text-lg font-semibold mb-3">
-                    À propos
-                  </h2>
-                  <p className="text-white/50 leading-relaxed whitespace-pre-line">
-                    {event.description}
-                  </p>
-                </div>
-              )}
-
-              {/* Map placeholder */}
-              <div className="rounded-xl overflow-hidden h-64 bg-white/5 flex items-center justify-center">
-                <div className="text-center">
-                  <svg
-                    className="w-8 h-8 text-white/20 mx-auto mb-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"
-                    />
-                  </svg>
-                  <p className="text-sm text-white/30">{event.address}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Ticket card */}
-            <div className="w-full md:w-80 flex-shrink-0">
-              <div className="glass rounded-2xl p-6 sticky top-24">
-                <div className="mb-4">
-                  <span className="font-display text-3xl font-bold gradient-text">
-                    {formatPrice(event.price, event.currency)}
-                  </span>
-                  <span className="text-white/40 text-sm ml-1">/ billet</span>
-                </div>
-
-                {ticketsRemaining > 0 ? (
-                  <p className="text-sm text-white/50 mb-6">
-                    <span className="text-rose-400 font-medium">
-                      {ticketsRemaining} billets restants
-                    </span>{" "}
-                    sur {event.tickets_total}
-                  </p>
-                ) : (
-                  <p className="text-sm text-rose-400 font-medium mb-6">
-                    Complet
-                  </p>
-                )}
-
-                {/* Progress bar */}
-                <div className="w-full h-2 rounded-full bg-white/10 mb-6">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-violet-500 to-rose-500 transition-all"
-                    style={{
-                      width: `${(event.tickets_sold / event.tickets_total) * 100}%`,
-                    }}
-                  />
-                </div>
-
-                <a
-                  href={APP_STORE_URL}
-                  className="block w-full text-center px-6 py-3.5 rounded-xl bg-gradient-to-r from-violet-500 to-rose-500 font-semibold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all"
-                >
-                  Acheter un billet dans l&apos;app
-                </a>
-              </div>
-            </div>
+          {/* Price */}
+          <div className="p-4 bg-brand-card border border-brand-border rounded-xl">
+            <p className="text-brand-muted text-sm mb-1">Prix par billet</p>
+            <p className="text-lg font-semibold text-brand-text">
+              ${event.price.toFixed(2)}
+            </p>
           </div>
         </div>
-      </main>
-      <Footer />
-    </>
-  );
+
+        {/* Venue Info */}
+        <div className="mb-8 p-6 bg-brand-card border border-brand-border rounded-2xl">
+          <h3 className="text-xl font-bold text-brand-text mb-4">📍 Lieu</h3>
+          <p className="text-lg font-semibold text-brand-text mb-2">{event.venue}</p>
+          <p className="text-brand-text">{event.address}</p>
+        </div>
+
+        {/* Google Maps Placeholder */}
+        <div className="mb-8 rounded-2xl overflow-hidden border border-brand-border bg-brand-card/50 h-80 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-brand-muted text-lg">Carte interactive à venir</p>
+          </div>
+        </div>
+
+        {/* Availability Info */}
+        <div className="mb-8 p-6 bg-brand-card border border-brand-border rounded-2xl">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold text-brand-text">Billets disponibles</h3>
+            <span className="text-2xl font-bold text-brand-green">
+              {ticketsRemaining}
+            </span>
+          </div>
+          <div className="w-full bg-brand-border rounded-full h-2">
+            <div
+              className="bg-brand-green h-2 rounded-full transition-all"
+              style={{
+                width: `${((event.total_tickets - ticketsRemaining) / event.total_tickets) * 100}%`,
+              }}
+            />
+          </div>
+          <p className="text-brand-muted text-sm mt-3">
+            {event.total_tickets - event.tickets_sold} billets restants sur {event.total_tickets}
+          </p>
+        </div>
+
+        {/* Organizer */}
+        {event.pro && (
+          <div className="mb-8 p-6 bg-brand-card border border-brand-border rounded-2xl flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {event.pro.avatar_url && (
+                <Image
+                  src={event.pro.avatar_url}
+                  alt={event.pro.full_name}
+                  width={80}
+                  height={80}
+                  className="rounded-full object-cover"
+                />
+              )}
+              <div>
+                <p className="text-brand-muted text-sm mb-1">Organisateur</p>
+                <Link
+                  href={`/pro/${event.pro.username}`}
+                  className="text-xl font-semibold text-brand-text hover:text-brand-green transition"
+                >
+                  {event.pro.full_name}
+                </Link>
+                <p className="text-brand-muted text-sm">
+                  ⭐ {event.pro.rating.toFixed(1)} ({event.pro.review_count} avis)
+                </p>
+              </div>
+            </div>
+            <Link
+              href={`/pro/${event.pro.username}`}
+              className="px-6 py-3 bg-brand-green text-white rounded-xl font-semibold hover:bg-brand-green/90 transition"
+            >
+              Voir le profil
+            </Link>
+          </div>
+        )}
+
+        {/* Description */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-brand-text mb-4">À propos de l&apos;événement</h2>
+          <p className="text-brand-text leading-relaxed whitespace-pre-wrap">
+            {event.description}
+          </p>
+        </div>
+
+        {/* CTA */}
+        <div className="mb-12 p-6 bg-brand-card border border-brand-border rounded-2xl">
+          <h3 className="text-xl font-bold text-brand-text mb-4">
+            Prêt à participer ?
+          </h3>
+          <p className="text-brand-muted mb-6">
+            Achetez votre billet directement via l&apos;app Spotbook.
+          </p>
+          <AppStoreButtons />
+        </div>
+      </div>
+    </div>
+  )
 }
