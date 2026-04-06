@@ -1,5 +1,7 @@
 'use client'
 
+export const runtime = 'edge'
+
 import { useState, useEffect, use } from 'react'
 import Image from 'next/image'
 import { supabase, ProProfile, Service, Video, Event, Review } from '@/lib/supabase'

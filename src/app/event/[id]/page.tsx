@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { supabase, Event } from '@/lib/supabase'
 import AppStoreButtons from '@/components/ui/AppStoreButtons'
 
+export const runtime = 'edge'
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const event = await fetchEvent(id)
