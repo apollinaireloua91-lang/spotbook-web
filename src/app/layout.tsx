@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import '@/styles/globals.css'
 import Navbar from '@/components/shared/Navbar'
 import Footer from '@/components/shared/Footer'
+import SplashScreen from '@/components/ui/SplashScreen'
 import { organizationJsonLd } from '@/lib/jsonld'
 
 export const metadata: Metadata = {
@@ -31,6 +32,13 @@ export const metadata: Metadata = {
     description: 'Découvrez, Réservez, Vivez.',
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48' },
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -42,10 +50,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
         />
       </head>
-      <body className="grain">
-        <Navbar />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+      <body className="grain" suppressHydrationWarning>
+        <SplashScreen>
+          <Navbar />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </SplashScreen>
       </body>
     </html>
   )

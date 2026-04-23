@@ -87,8 +87,8 @@ export default function TermsPage() {
               <div>
                 <h3 className="font-semibold text-brand-text">Commission Spotbook</h3>
                 <p className="text-brand-muted">
-                  Nous prélevons une commission de <strong>12 %</strong> sur chaque réservation de service
-                  et de <strong>7 %</strong> sur les ventes de billets d&apos;événements.
+                  Nous prélevons une commission de <strong>18 %</strong> sur chaque réservation de service
+                  et de <strong>12 %</strong> sur les ventes de billets d&apos;événements.
                 </p>
               </div>
               <div>
@@ -117,28 +117,22 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-bold text-brand-text mb-4">4. Politique d&apos;annulation</h2>
             <p>
-              Les professionnels peuvent définir leur politique d&apos;annulation. Voici les trois
+              Les professionnels peuvent définir leur politique d&apos;annulation. Voici les deux
               niveaux disponibles :
             </p>
 
             <div className="mt-4 space-y-4 pl-4 border-l-4 border-brand-green">
               <div>
-                <h3 className="font-semibold text-brand-text">Flexible (24h)</h3>
+                <h3 className="font-semibold text-brand-text">Modérée (24h)</h3>
                 <p className="text-brand-muted">
                   Annulation gratuite jusqu&apos;à 24 heures avant le service. Passé ce délai,
                   l&apos;acompte n&apos;est pas remboursable.
                 </p>
               </div>
               <div>
-                <h3 className="font-semibold text-brand-text">Modérée (48h)</h3>
+                <h3 className="font-semibold text-brand-text">Stricte (aucun remboursement)</h3>
                 <p className="text-brand-muted">
-                  Annulation gratuite jusqu&apos;à 48 heures avant. Après, l&apos;acompte n&apos;est pas remboursable.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-brand-text">Stricte (72h)</h3>
-                <p className="text-brand-muted">
-                  Annulation gratuite jusqu&apos;à 72 heures avant. Après, l&apos;acompte n&apos;est pas remboursable.
+                  L&apos;acompte n&apos;est pas remboursable, quel que soit le délai d&apos;annulation.
                 </p>
               </div>
             </div>

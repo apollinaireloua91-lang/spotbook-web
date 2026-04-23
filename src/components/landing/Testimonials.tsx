@@ -43,11 +43,14 @@ export default function Testimonials() {
   const prev = () => setCurrent((c) => (c - 1 + testimonials.length) % testimonials.length)
 
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-32 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        <ScrollReveal className="text-center mb-16">
-          <h2 className="font-display text-4xl sm:text-5xl font-bold text-brand-text mb-4">
-            Ce qu&apos;ils en disent
+        <ScrollReveal className="text-center mb-20">
+          <span className="text-xs tracking-[0.3em] uppercase text-brand-green-light font-semibold mb-4 inline-block">
+            · Témoignages ·
+          </span>
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 tracking-tight">
+            Ce qu&apos;ils en <span className="gradient-text">disent</span>
           </h2>
           <p className="text-brand-muted text-lg">
             Des professionnels qui font confiance à Spotbook
@@ -64,24 +67,32 @@ export default function Testimonials() {
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="glass-card p-10 sm:p-14 text-center relative"
             >
-              <Quote size={40} className="text-brand-green/10 mx-auto mb-6" />
+              <Quote size={44} className="text-brand-green-light/40 mx-auto mb-6" style={{ filter: 'drop-shadow(0 0 16px rgba(192,38,211,0.4))' }} />
 
-              <p className="text-xl sm:text-2xl text-brand-text leading-relaxed mb-8 font-light">
+              <p className="text-xl sm:text-2xl text-white leading-relaxed mb-8 font-light">
                 &ldquo;{testimonials[current].text}&rdquo;
               </p>
 
-              <div className="flex items-center justify-center gap-1 mb-4">
+              <div className="flex items-center justify-center gap-1 mb-6">
                 {Array.from({ length: testimonials[current].rating }).map((_, i) => (
-                  <Star key={i} size={18} className="fill-brand-green text-brand-green" />
+                  <Star
+                    key={i}
+                    size={18}
+                    className="fill-brand-green-light text-brand-green-light"
+                    style={{ filter: 'drop-shadow(0 0 8px rgba(192,38,211,0.6))' }}
+                  />
                 ))}
               </div>
 
               <div className="flex items-center justify-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-brand-green flex items-center justify-center text-white font-bold text-lg">
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg neon-glow"
+                  style={{ background: 'linear-gradient(135deg, #B026E8, #700B97)' }}
+                >
                   {testimonials[current].avatar}
                 </div>
                 <div className="text-left">
-                  <div className="font-semibold text-brand-text">{testimonials[current].name}</div>
+                  <div className="font-semibold text-white">{testimonials[current].name}</div>
                   <div className="text-sm text-brand-muted">{testimonials[current].role}</div>
                 </div>
               </div>
@@ -89,12 +100,12 @@ export default function Testimonials() {
           </AnimatePresence>
 
           {/* Controls */}
-          <div className="flex items-center justify-center gap-4 mt-8">
+          <div className="flex items-center justify-center gap-4 mt-10">
             <button
               onClick={prev}
-              className="w-12 h-12 rounded-full bg-brand-card border border-brand-border flex items-center justify-center hover:bg-brand-green/5 transition-colors"
+              className="w-12 h-12 rounded-full bg-brand-card/60 border border-brand-green/30 flex items-center justify-center hover:border-brand-green-light/70 hover:shadow-neon transition-all backdrop-blur-md"
             >
-              <ChevronLeft size={20} className="text-brand-green" />
+              <ChevronLeft size={20} className="text-brand-green-light" />
             </button>
 
             <div className="flex gap-2">
@@ -103,7 +114,9 @@ export default function Testimonials() {
                   key={i}
                   onClick={() => setCurrent(i)}
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    i === current ? 'w-8 bg-brand-green' : 'w-2 bg-brand-border'
+                    i === current
+                      ? 'w-8 bg-brand-green-light shadow-neon'
+                      : 'w-2 bg-brand-green/30 hover:bg-brand-green/60'
                   }`}
                 />
               ))}
@@ -111,9 +124,9 @@ export default function Testimonials() {
 
             <button
               onClick={next}
-              className="w-12 h-12 rounded-full bg-brand-card border border-brand-border flex items-center justify-center hover:bg-brand-green/5 transition-colors"
+              className="w-12 h-12 rounded-full bg-brand-card/60 border border-brand-green/30 flex items-center justify-center hover:border-brand-green-light/70 hover:shadow-neon transition-all backdrop-blur-md"
             >
-              <ChevronRight size={20} className="text-brand-green" />
+              <ChevronRight size={20} className="text-brand-green-light" />
             </button>
           </div>
         </div>

@@ -18,7 +18,7 @@ const FAQ_CATEGORIES = [
       },
       {
         q: 'Puis-je annuler ma réservation ?',
-        a: 'Oui, vous pouvez annuler avant la limite définie par le professionnel (Flexible: 24h, Modérée: 48h, Stricte: 72h). Les annulations dans le délai sont remboursées. Passé ce délai, l&apos;acompte n&apos;est pas remboursable.',
+        a: 'Oui, vous pouvez annuler selon la politique définie par le professionnel (Modérée : 24h avant le service, ou Stricte : aucun remboursement). Les annulations dans le délai modéré sont remboursées. Passé ce délai, l&apos;acompte n&apos;est pas remboursable.',
       },
       {
         q: 'Comment puis-je acheter des billets pour un événement ?',
@@ -51,7 +51,7 @@ const FAQ_CATEGORIES = [
       },
       {
         q: 'Quels frais Spotbook prélève-t-il ?',
-        a: 'Spotbook prélève une commission de 12% sur chaque réservation de service et 7% sur les ventes de billets d\'événements. Ces frais couvrent les frais de paiement, la plateforme et le support.',
+        a: 'Spotbook prélève une commission de 18% sur chaque réservation de service et 12% sur les ventes de billets d\'événements. Ces frais couvrent les frais de paiement, la plateforme et le support.',
       },
       {
         q: 'Comment puis-je ajouter mes services ?',

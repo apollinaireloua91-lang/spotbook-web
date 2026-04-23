@@ -52,47 +52,53 @@ const features = [
 
 export default function FeatureGrid() {
   return (
-    <section className="py-24 relative" id="features">
+    <section className="py-32 relative" id="features">
       <div className="max-w-7xl mx-auto px-6">
-        <ScrollReveal className="text-center mb-16">
-          <h2 className="font-display text-4xl sm:text-5xl font-bold text-brand-text mb-4">
-            Tout ce dont vous avez besoin
+        <ScrollReveal className="text-center mb-20">
+          <span className="text-xs tracking-[0.3em] uppercase text-brand-green-light font-semibold mb-4 inline-block">
+            · Fonctionnalités ·
+          </span>
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 tracking-tight">
+            Tout ce dont vous <span className="gradient-text">avez besoin</span>
           </h2>
           <p className="text-brand-muted text-lg max-w-xl mx-auto">
             Une plateforme complète pour les clients et les professionnels
           </p>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {features.map((feature, i) => (
             <ScrollReveal key={feature.title} delay={i * 0.08} className={feature.span}>
               <motion.div
-                whileHover={{ y: -4, scale: 1.01 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="glass-card p-8 h-full group cursor-default relative overflow-hidden"
+                whileHover={{ y: -6 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+                className="glass-card p-8 h-full group cursor-default relative"
               >
-                {/* Hover glow */}
-                <div className="absolute inset-0 rounded-[1.25rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-brand-green/5 to-transparent" />
+                {/* Corner neon accent */}
+                <div
+                  className="absolute -top-px -left-px w-24 h-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{
+                    background:
+                      'radial-gradient(circle at top left, rgba(192,38,211,0.5), transparent 70%)',
+                  }}
+                />
 
                 <div className="relative z-10">
                   <motion.div
                     whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
                     transition={{ duration: 0.5 }}
-                    className="w-14 h-14 rounded-2xl bg-brand-green/10 flex items-center justify-center mb-5 group-hover:bg-brand-green/15 transition-colors"
+                    className="w-14 h-14 rounded-2xl bg-brand-green/20 border border-brand-green/40 flex items-center justify-center mb-5 group-hover:bg-brand-green/30 group-hover:border-brand-green-light/60 transition-colors neon-glow"
                   >
-                    <feature.icon size={24} className="text-brand-green" />
+                    <feature.icon size={24} className="text-brand-green-light" />
                   </motion.div>
 
-                  <h3 className="font-display text-xl font-bold text-brand-text mb-2">
+                  <h3 className="font-display text-xl font-bold text-white mb-2 tracking-tight">
                     {feature.title}
                   </h3>
                   <p className="text-brand-muted leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
-
-                {/* Border glow on hover */}
-                <div className="absolute inset-0 rounded-[1.25rem] border border-brand-green/0 group-hover:border-brand-green/10 transition-colors duration-500" />
               </motion.div>
             </ScrollReveal>
           ))}
