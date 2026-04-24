@@ -298,7 +298,7 @@ export default function SupportPage() {
         </div>
 
         {/* Contact Section */}
-        <div className="border-t border-brand-border pt-12">
+        <div id="contact" className="scroll-mt-24 border-t border-brand-border pt-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Contact Info */}
             <div>
