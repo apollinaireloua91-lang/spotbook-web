@@ -142,7 +142,6 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1], delay: 1.05 }}
             className="mt-9 flex flex-wrap items-center gap-3"
-            id="download"
           >
             <MagneticButton href="#download" className="cta" strength={0.3}>
               <AppleMark />

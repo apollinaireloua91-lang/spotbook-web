@@ -44,7 +44,34 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
     gsap.ticker.add(raf)
     gsap.ticker.lagSmoothing(0)
 
+    // Intercept same-page anchor clicks so Lenis handles the scroll
+    // (native hash navigation fights smooth-scroll). Offsets below the
+    // sticky nav header so the target isn't hidden under it.
+    const NAV_OFFSET = 96
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null
+      if (!target) return
+      const anchor = target.closest<HTMLAnchorElement>('a[href^="#"]')
+      if (!anchor) return
+      const href = anchor.getAttribute('href')
+      if (!href || href === '#' || href.length < 2) return
+
+      const el = document.querySelector(href)
+      if (!el) return
+
+      e.preventDefault()
+      lenis.scrollTo(el as HTMLElement, { offset: -NAV_OFFSET, duration: 1.4 })
+      // Update URL without jumping
+      try {
+        history.replaceState(null, '', href)
+      } catch {
+        /* ignore */
+      }
+    }
+    document.addEventListener('click', handleAnchorClick)
+
     return () => {
+      document.removeEventListener('click', handleAnchorClick)
       gsap.ticker.remove(raf)
       lenis.destroy()
       lenisRef.current = null
