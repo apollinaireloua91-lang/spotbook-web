@@ -1,88 +1,141 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import ScrollReveal from '@/components/ui/ScrollReveal'
-import Phone3D from '@/components/ui/Phone3D'
-import { Check, ArrowRight } from 'lucide-react'
-import Link from 'next/link'
+/**
+ * ForProfessionals v2
+ * ------------------------------------------------------------------
+ * Split-layout pitch for pros. Checklist of benefits, magnetic CTA,
+ * phone mockup showing the dashboard-style demos.
+ */
 
-const benefits = [
-  'Publiez des vidéos pour montrer votre travail',
-  'Gérez votre agenda et vos disponibilités',
-  'Recevez des paiements sécurisés (virement automatique)',
-  'Suivez vos revenus et vos avis clients',
-  'Commission transparente : 18% sur les réservations',
+import { motion } from 'framer-motion'
+import { Check, ArrowRight } from 'lucide-react'
+import PhoneMockup from '@/components/ui/PhoneMockup'
+import MagneticButton from '@/components/ui/MagneticButton'
+
+const BENEFITS = [
+  'Publiez des vidéos verticales qui convertissent comme TikTok',
+  'Agenda synchronisé, créneaux temps réel, zéro double-booking',
+  'Stripe Connect intégré — paiement direct sur votre compte',
+  'Messagerie, rappels automatiques, suivi des avis',
+  '0% de commission sur vos services',
 ]
 
 export default function ForProfessionals() {
   return (
-    <section className="py-32 relative overflow-hidden" id="professionals">
-      {/* Ambient purple wash */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-card/15 to-transparent pointer-events-none" />
-      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] rounded-full bg-brand-green/15 blur-[140px] -translate-y-1/2 pointer-events-none" />
+    <section
+      id="for-pros"
+      className="relative overflow-hidden py-32 md:py-40"
+    >
+      {/* Ambient left glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-[-200px] top-1/2 h-[560px] w-[560px] -translate-y-1/2 rounded-full"
+        style={{
+          background:
+            'radial-gradient(ellipse at center, rgba(176,38,232,0.35), transparent 65%)',
+          filter: 'blur(80px)',
+        }}
+      />
 
-      <div className="relative max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-        <ScrollReveal direction="left">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-card/50 border border-brand-green/40 backdrop-blur-md neon-glow">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-neon animate-pulse" style={{ boxShadow: '0 0 8px #C026D3' }} />
-              <span className="text-sm font-semibold text-brand-green-light tracking-wide">Pour les Pros</span>
-            </div>
+      <div className="relative mx-auto grid max-w-[1240px] grid-cols-1 items-center gap-14 px-6 md:grid-cols-[1fr_1fr] md:px-12">
+        <div>
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.7, ease: [0.19, 1, 0.22, 1] }}
+            className="chip"
+          >
+            <span className="chip-dot" />
+            Pour les pros
+          </motion.span>
 
-            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.05]">
-              Vous êtes{' '}
-              <span className="gradient-text">professionnel</span> ?
-            </h2>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1], delay: 0.08 }}
+            className="display-lg font-display mt-6 text-balance"
+          >
+            Ton studio.{' '}
+            <span className="bg-gradient-to-r from-[#FDF2C3] via-[#B026E8] to-[#8E05C2] bg-clip-text text-transparent">
+              Ton agenda.
+            </span>{' '}
+            Ton empire.
+          </motion.h2>
 
-            <p className="text-lg text-brand-muted leading-relaxed max-w-md">
-              Rejoignez des centaines de prestataires qui développent leur
-              clientèle avec Spotbook.
-            </p>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1], delay: 0.14 }}
+            className="mt-6 max-w-[500px] text-[17px] leading-[1.6] text-[color:var(--fg-muted)]"
+          >
+            Rejoins 500+ pros qui remplissent leur calendrier sans pub Meta,
+            sans DM à gérer, sans spreadsheet.
+          </motion.p>
 
-            <ul className="space-y-4 pt-2">
-              {benefits.map((benefit, i) => (
-                <motion.li
-                  key={benefit}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.4 }}
-                  className="flex items-start gap-3"
-                >
-                  <div className="mt-0.5 w-6 h-6 rounded-lg bg-brand-green/25 border border-brand-green/50 flex items-center justify-center flex-shrink-0 neon-glow">
-                    <Check size={14} className="text-brand-green-light" />
-                  </div>
-                  <span className="text-white/85">{benefit}</span>
-                </motion.li>
-              ))}
-            </ul>
-
-            <motion.div
-              whileHover={{ x: 4 }}
-              className="inline-block pt-4"
-            >
-              <Link
-                href="#download"
-                className="btn-primary inline-flex items-center gap-2 group"
+          <ul className="mt-10 space-y-4">
+            {BENEFITS.map((b, i) => (
+              <motion.li
+                key={b}
+                initial={{ opacity: 0, x: -16 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{
+                  duration: 0.6,
+                  ease: [0.19, 1, 0.22, 1],
+                  delay: 0.2 + i * 0.06,
+                }}
+                className="flex items-start gap-4"
               >
-                Devenir Prestataire — C&apos;est gratuit
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform relative z-10" />
-              </Link>
-            </motion.div>
-          </div>
-        </ScrollReveal>
+                <span
+                  className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, rgba(176,38,232,0.3), rgba(62,6,95,0.5))',
+                    boxShadow:
+                      '0 0 0 1px rgba(176,38,232,0.45) inset, 0 0 12px -2px rgba(176,38,232,0.5)',
+                  }}
+                >
+                  <Check size={13} className="text-[color:var(--sb-cream)]" />
+                </span>
+                <span className="text-[16px] leading-[1.5] text-[color:var(--fg)]/85">
+                  {b}
+                </span>
+              </motion.li>
+            ))}
+          </ul>
 
-        <ScrollReveal direction="right" delay={0.2} className="flex justify-center">
-          <div className="relative p-14 rounded-[2.5rem] bg-gradient-to-br from-brand-card/50 via-brand-mid/15 to-transparent border border-brand-green/20 backdrop-blur-md overflow-hidden">
-            <div className="absolute inset-0 bg-radial-neon opacity-60 pointer-events-none" />
-            <div className="relative">
-              <Phone3D
-                screenContent="dashboard"
-                videoSrcs={['/videos/demo-barber.mp4', '/videos/demo-nails.mp4', '/videos/demo-coach.mp4']}
-              />
-            </div>
-          </div>
-        </ScrollReveal>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1], delay: 0.55 }}
+            className="mt-10"
+          >
+            <MagneticButton href="#download" className="cta" strength={0.3}>
+              Devenir Prestataire — C’est gratuit
+              <ArrowRight size={18} />
+            </MagneticButton>
+          </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 48 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-120px' }}
+          transition={{ duration: 1, ease: [0.19, 1, 0.22, 1], delay: 0.15 }}
+          className="flex justify-center md:justify-end"
+        >
+          <PhoneMockup
+            sources={[
+              '/videos/demo-barber.mp4',
+              '/videos/demo-coach.mp4',
+              '/videos/demo-reservez.mp4',
+            ]}
+          />
+        </motion.div>
       </div>
     </section>
   )

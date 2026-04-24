@@ -10,25 +10,35 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          // Neon Purple Palette
-          bg: "#000000",              // fond noir pur
-          card: "#3E065F",            // violet très foncé (cards)
-          "card-deep": "#1A0330",     // violet quasi-noir (layered cards)
-          green: "#8E05C2",           // alias legacy -> violet vif (CTA)
-          "green-light": "#B026E8",   // violet clair (highlights)
-          mid: "#700B97",             // violet moyen (gradients)
-          text: "#FFFFFF",            // texte principal
-          border: "rgba(142, 5, 194, 0.25)",  // bordure néon subtile
+          // Spotbook Premium v2
+          bg: "#0C0C0C",
+          "bg-pure": "#000000",
+          dark: "#0C0C0C",
+          "dark-elev": "#141014",
+          light: "#F3F4F1",
+          cream: "#FDF2C3",
+          violet: "#8E05C2",
+          "violet-glow": "#B026E8",
+          "violet-deep": "#3E065F",
+
+          // Legacy aliases kept to avoid breaking other sections
+          card: "#3E065F",
+          "card-deep": "#1A0330",
+          green: "#8E05C2",
+          "green-light": "#B026E8",
+          mid: "#700B97",
+          text: "#F3F4F1",
+          border: "rgba(142, 5, 194, 0.25)",
           "border-strong": "rgba(142, 5, 194, 0.5)",
-          beige: "#3E065F",           // alias legacy -> dark purple
-          "beige-dark": "#2A0440",    // alias legacy -> deeper purple
-          muted: "#B8A0D9",           // lavande claire (texte secondaire)
-          neon: "#C026D3",            // rose-violet néon (accent rare)
+          beige: "#3E065F",
+          "beige-dark": "#2A0440",
+          muted: "#B8A0D9",
+          neon: "#C026D3",
         },
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
-        display: ["var(--font-space-grotesk)", "system-ui", "sans-serif"],
+        sans: ["var(--font-dm-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["'Clash Display'", "var(--font-dm-sans)", "system-ui", "sans-serif"],
       },
       boxShadow: {
         neon: "0 0 20px rgba(142, 5, 194, 0.35), 0 0 40px rgba(142, 5, 194, 0.15)",
